@@ -1,0 +1,18 @@
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Task 1 - Searching for Log Files
+    find:
+      paths: /var/log/
+      patterns: '*.log'
+    register: log_files
+
+  - name: Task 2 - Copying Log Files from Control Node to Manage Node
+    fetch:
+      src: "{{ item.path }}"
+      dest: /tmp/logs/
+      flat: yes
+    with_items: "{{ log_files.files }}"
+
